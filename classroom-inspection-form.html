@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classroom Physical Learning Environment Inspection</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #1a1a1a; line-height: 1.5; }
+
+  .form-container { max-width: 720px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  .form-header {
+    background: linear-gradient(135deg, #1a5276 0%, #2e86c1 100%);
+    color: white; border-radius: 12px 12px 0 0; padding: 32px 28px;
+    border-top: 6px solid #f39c12;
+  }
+  .form-header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+  .form-header p { font-size: 0.9rem; opacity: 0.9; }
+  .form-header-bar {
+    background: white; border-radius: 0 0 12px 12px; padding: 16px 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+    font-size: 0.85rem; color: #555;
+  }
+
+  .section {
+    background: white; border-radius: 12px; padding: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 16px;
+    border-left: 4px solid transparent; transition: all 0.3s ease;
+  }
+  .section.active { border-left-color: #2e86c1; }
+  .section.hidden { display: none; }
+
+  .section-title {
+    font-size: 1.1rem; font-weight: 700; color: #1a5276; margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 16px; font-weight: 600;
+  }
+  .section-desc { font-size: 0.88rem; color: #555; margin-bottom: 20px; font-style: italic; }
+
+  .frequency-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .freq-daily { background: #d5f5e3; color: #1e8449; }
+  .freq-weekly { background: #d6eaf8; color: #2471a3; }
+  .freq-monthly { background: #fdebd0; color: #ca6f1e; }
+  .freq-boy-moy { background: #f5e6ff; color: #7d3c98; }
+
+  .form-group { margin-bottom: 20px; }
+  .form-group:last-child { margin-bottom: 0; }
+
+  label.field-label {
+    display: block; font-size: 0.92rem; font-weight: 600; margin-bottom: 8px; color: #333;
+  }
+  label.field-label .required { color: #e74c3c; margin-left: 2px; }
+  .field-hint { font-size: 0.8rem; color: #888; margin-bottom: 8px; }
+
+  select, input[type="text"], input[type="date"], input[type="email"], textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #ddd; border-radius: 8px;
+    font-size: 0.92rem; font-family: inherit; transition: border-color 0.2s;
+    background: white;
+  }
+  select:focus, input:focus, textarea:focus { outline: none; border-color: #2e86c1; box-shadow: 0 0 0 3px rgba(46,134,193,0.1); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .radio-group, .rating-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-option {
+    display: flex; align-items: center; padding: 10px 14px;
+    border: 1.5px solid #e8e8e8; border-radius: 8px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .radio-option:hover { background: #f8f9fa; border-color: #ccc; }
+  .radio-option input[type="radio"] { margin-right: 12px; accent-color: #2e86c1; width: 18px; height: 18px; }
+  .radio-option label { cursor: pointer; font-size: 0.9rem; flex: 1; }
+
+  .rating-row {
+    display: flex; align-items: center; gap: 8px; padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .rating-row:last-child { border-bottom: none; }
+  .rating-label { flex: 1; font-size: 0.88rem; min-width: 120px; }
+  .rating-options { display: flex; gap: 4px; }
+  .rating-btn {
+    width: 36px; height: 36px; border: 1.5px solid #ddd; border-radius: 8px;
+    background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+    transition: all 0.2s; color: #666;
+  }
+  .rating-btn:hover { border-color: #2e86c1; color: #2e86c1; }
+  .rating-btn.selected { background: #2e86c1; color: white; border-color: #2e86c1; }
+  .rating-btn.na-btn.selected { background: #95a5a6; border-color: #95a5a6; }
+
+  .checklist-item {
+    display: flex; align-items: flex-start; padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item input[type="checkbox"] {
+    margin-right: 12px; margin-top: 3px; accent-color: #2e86c1;
+    width: 18px; height: 18px; flex-shrink: 0;
+  }
+  .checklist-text { font-size: 0.9rem; }
+  .checklist-sub { font-size: 0.8rem; color: #888; margin-top: 2px; }
+
+  .category-header {
+    font-size: 0.95rem; font-weight: 700; color: #1a5276;
+    padding: 12px 0 8px; border-bottom: 2px solid #2e86c1; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .category-icon { font-size: 1.1rem; }
+
+  .btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
+  .btn {
+    padding: 12px 28px; border: none; border-radius: 8px; font-size: 0.95rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+  }
+  .btn-primary { background: #2e86c1; color: white; }
+  .btn-primary:hover { background: #1a5276; }
+  .btn-secondary { background: #f0f2f5; color: #555; }
+  .btn-secondary:hover { background: #e0e3e8; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .progress-bar {
+    height: 4px; background: #e8e8e8; border-radius: 2px; margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-fill { height: 100%; background: #2e86c1; border-radius: 2px; transition: width 0.4s ease; }
+
+  .step-indicator {
+    display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;
+  }
+  .step-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: #ddd; transition: all 0.3s;
+  }
+  .step-dot.active { background: #2e86c1; transform: scale(1.2); }
+  .step-dot.completed { background: #27ae60; }
+
+  .summary-card {
+    background: #f8f9fa; border-radius: 8px; padding: 16px; margin-bottom: 12px;
+  }
+  .summary-card h4 { font-size: 0.9rem; color: #1a5276; margin-bottom: 8px; }
+  .summary-item { font-size: 0.85rem; padding: 4px 0; display: flex; justify-content: space-between; }
+  .summary-value { font-weight: 600; }
+  .summary-value.yes { color: #27ae60; }
+  .summary-value.no { color: #e74c3c; }
+  .summary-value.na { color: #95a5a6; }
+
+  .success-screen { text-align: center; padding: 40px 20px; }
+  .success-icon { font-size: 3rem; margin-bottom: 16px; }
+  .success-screen h2 { color: #27ae60; margin-bottom: 8px; }
+
+  .score-display {
+    display: inline-flex; align-items: baseline; gap: 4px;
+    font-size: 2rem; font-weight: 700; color: #1a5276;
+  }
+  .score-display .total { font-size: 1.2rem; color: #888; font-weight: 400; }
+
+  @media (max-width: 600px) {
+    .form-container { padding: 12px 8px 80px; }
+    .form-header { padding: 24px 20px; }
+    .section { padding: 20px; }
+    .rating-options { gap: 2px; }
+    .rating-btn { width: 32px; height: 32px; font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="form-container" id="app">
+  <div class="form-header">
+    <h1>Classroom Physical Learning Environment</h1>
+    <p>Inspection of Excellence — Daily / Weekly / Monthly / BOY & MOY</p>
+  </div>
+  <div class="form-header-bar">
+    <span id="dateDisplay"></span> &nbsp;|&nbsp; Complete only the sections relevant to your role and inspection frequency.
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="step-indicator" id="stepIndicator"></div>
+
+  <!-- STEP 1: Identity -->
+  <div class="section active" id="step-1" data-step="1">
+    <div class="section-title">Who Are You?</div>
+    <div class="section-subtitle">Inspector Identification</div>
+
+    <div class="form-group">
+      <label class="field-label">Your Name<span class="required">*</span></label>
+      <input type="text" id="inspectorName" placeholder="First and Last Name" required>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Your Role<span class="required">*</span></label>
+      <div class="field-hint">Select which "Inspector of Excellence" role best describes you today. This determines which items you'll evaluate.</div>
+      <div class="radio-group" id="roleSelect">
+        <div class="radio-option">
+          <input type="radio" name="role" id="role-instructional" value="instructional">
+          <label for="role-instructional"><strong>Instructional Teammate</strong><br><span style="font-size:0.8rem;color:#888">Board config, daily data, signage, schedules, college messaging</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="role" id="role-culture" value="culture">
+          <label for="role-culture"><strong>Culture Teammate</strong><br><span style="font-size:0.8rem;color:#888">Identity-affirming decor, BEAT points, student of the week, incentives</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="role" id="role-ops" value="ops">
+          <label for="role-ops"><strong>Ops Teammate</strong><br><span style="font-size:0.8rem;color:#888">First aid, attendance incentives, bulletin boards, evacuation, emergency</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="role" id="role-admin" value="admin">
+          <label for="role-admin"><strong>School Leader / Admin</strong><br><span style="font-size:0.8rem;color:#888">Full inspection — all items across all roles</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">School<span class="required">*</span></label>
+      <select id="schoolSelect">
+        <option value="">Select your school...</option>
+        <optgroup label="Newark">
+          <option>KIPP Newark Collegiate Academy</option>
+          <option>KIPP TEAM Academy</option>
+          <option>KIPP SPARK Academy</option>
+          <option>KIPP Seek Academy</option>
+          <option>KIPP Rise Academy</option>
+          <option>KIPP Bold Academy</option>
+          <option>KIPP Forward Academy</option>
+          <option>KIPP Lanning Square</option>
+          <option>KIPP Whittier</option>
+          <option>KIPP Life Academy</option>
+          <option>KIPP Pathways</option>
+        </optgroup>
+        <optgroup label="Camden">
+          <option>KIPP Cooper Norcross Academy</option>
+          <option>KIPP Whittier Middle</option>
+          <option>KIPP Camden Primary</option>
+        </optgroup>
+        <optgroup label="Paterson">
+          <option>KIPP Paterson Prep</option>
+        </optgroup>
+        <optgroup label="Miami">
+          <option>KIPP Miami</option>
+        </optgroup>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Classroom / Teacher Being Inspected<span class="required">*</span></label>
+      <input type="text" id="classroomTeacher" placeholder="e.g., Room 204 — Ms. Johnson">
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Inspection Frequency<span class="required">*</span></label>
+      <div class="field-hint">Which cycle is this inspection for? You'll only see items for the selected frequency (plus all higher frequencies).</div>
+      <div class="radio-group" id="freqSelect">
+        <div class="radio-option">
+          <input type="radio" name="freq" id="freq-daily" value="daily">
+          <label for="freq-daily"><strong>Daily Check</strong></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="freq" id="freq-weekly" value="weekly">
+          <label for="freq-weekly"><strong>Weekly Check</strong><span style="font-size:0.8rem;color:#888"> — includes daily items</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="freq" id="freq-monthly" value="monthly">
+          <label for="freq-monthly"><strong>Monthly Check</strong><span style="font-size:0.8rem;color:#888"> — includes daily + weekly items</span></label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" name="freq" id="freq-boy-moy" value="boy-moy">
+          <label for="freq-boy-moy"><strong>BOY / MOY Check</strong><span style="font-size:0.8rem;color:#888"> — full inspection, all items</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startInspection()">Start Inspection →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: The Blueprint -->
+  <div class="section hidden" id="step-2" data-step="2">
+    <div class="section-title">The Blueprint</div>
+    <div class="section-subtitle">Cleanliness & Readiness</div>
+    <div class="section-desc">Within 5 seconds of entering, can you discern the cleanliness and readiness to support students in learning?</div>
+    <div id="blueprintItems"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Next: Doorbell Effect →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: The Doorbell Effect -->
+  <div class="section hidden" id="step-3" data-step="3">
+    <div class="section-title">The Doorbell Effect</div>
+    <div class="section-subtitle">Pride & Culture</div>
+    <div class="section-desc">Within 5 seconds of entering, does the room feel like a place where a student would feel proud to learn?</div>
+    <div id="doorbellItems"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Next: Notes & Submit →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Overall + Notes -->
+  <div class="section hidden" id="step-4" data-step="4">
+    <div class="section-title">Overall Impressions</div>
+    <div class="section-subtitle">Final Notes</div>
+
+    <div class="form-group">
+      <label class="field-label">Overall Rating for This Classroom</label>
+      <div class="rating-options" style="display:flex; gap:8px; margin-top:4px;">
+        <button class="rating-btn overall-rating" data-val="1" onclick="setOverall(this)">1</button>
+        <button class="rating-btn overall-rating" data-val="2" onclick="setOverall(this)">2</button>
+        <button class="rating-btn overall-rating" data-val="3" onclick="setOverall(this)">3</button>
+        <button class="rating-btn overall-rating" data-val="4" onclick="setOverall(this)">4</button>
+        <button class="rating-btn overall-rating" data-val="5" onclick="setOverall(this)">5</button>
+      </div>
+      <div class="field-hint" style="margin-top:8px">1 = Needs significant attention &nbsp;|&nbsp; 3 = Meets expectations &nbsp;|&nbsp; 5 = Model classroom</div>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Top Strength Observed</label>
+      <textarea id="topStrength" placeholder="What stood out positively?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Highest-Priority Action Item</label>
+      <textarea id="actionItem" placeholder="What's the single most important thing to address?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Additional Notes</label>
+      <textarea id="additionalNotes" placeholder="Anything else worth capturing..."></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(5)">Review & Submit →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Review & Submit -->
+  <div class="section hidden" id="step-5" data-step="5">
+    <div class="section-title">Review Your Inspection</div>
+    <div class="section-subtitle">Confirm & Submit</div>
+    <div id="reviewContent"></div>
+    <div class="btn-row" style="margin-top:20px;">
+      <button class="btn btn-secondary" onclick="goStep(4)">← Edit</button>
+      <button class="btn btn-primary" onclick="submitForm()">Submit Inspection ✓</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: Success -->
+  <div class="section hidden" id="step-6" data-step="6">
+    <div class="success-screen">
+      <div class="success-icon">✅</div>
+      <h2>Inspection Submitted</h2>
+      <p id="successMsg" style="color:#555; margin-bottom:8px;"></p>
+      <p id="successSubMsg" style="font-size:0.85rem; margin-bottom:20px;"></p>
+      <div id="scoreBox" style="margin-bottom:24px;"></div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" onclick="downloadCSV()">Download CSV</button>
+        <button class="btn btn-secondary" onclick="resetForm()">New Inspection</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA MODEL — maps directly to the docx
+// ============================================================
+const ITEMS = {
+  blueprint: [
+    // DAILY
+    { id: 'bp-clean', freq: 'daily', role: 'everyone', label: 'Clean: Ready for daily learning', sub: 'Floors, surfaces, no clutter, trash emptied' },
+    { id: 'bp-organized', freq: 'daily', role: 'instructional', label: 'Organized: Predictable', sub: 'Materials in consistent, labeled locations; room layout supports instruction' },
+    { id: 'bp-board', freq: 'daily', role: 'instructional', label: 'Board Configuration', sub: 'Date, objectives, and agenda visible (on board or on slides)' },
+    { id: 'bp-data', freq: 'daily', role: 'instructional', label: 'Daily Data Posted', sub: "Previous day's exit ticket data by class, with goals and current day class attendance" },
+    // WEEKLY
+    { id: 'bp-goals', freq: 'weekly', role: 'instructional', label: 'Goals & Mastery Trackers', sub: 'Signage & Decor' },
+    { id: 'bp-wordwall', freq: 'weekly', role: 'instructional', label: 'Word Walls', sub: 'ES, MS, HS' },
+    { id: 'bp-anchor', freq: 'weekly', role: 'instructional', label: 'Dated Anchor Charts', sub: '' },
+    { id: 'bp-desklabels', freq: 'weekly', role: 'instructional', label: 'Desk Labels in Good Condition', sub: 'Student names, number lines, etc. (ES)' },
+    { id: 'bp-matbins', freq: 'weekly', role: 'instructional', label: 'Labeled Materials Bins', sub: '' },
+    // MONTHLY
+    { id: 'bp-firstaid', freq: 'monthly', role: 'ops', label: 'First Aid Kit', sub: 'Present and full of supplies' },
+    // BOY & MOY
+    { id: 'bp-schedule', freq: 'boy-moy', role: 'instructional', label: 'Class Schedule Posted', sub: 'ES, MS' },
+    { id: 'bp-agreements', freq: 'boy-moy', role: 'instructional', label: 'Classroom Agreements', sub: '' },
+    { id: 'bp-volume', freq: 'boy-moy', role: 'culture', label: 'Volume Level Expectations Posted', sub: '' },
+    { id: 'bp-evac', freq: 'boy-moy', role: 'ops', label: 'Evacuation Route Posted', sub: '' },
+    { id: 'bp-emergency', freq: 'boy-moy', role: 'ops', label: 'Emergency Folders Present', sub: '' },
+  ],
+  doorbell: [
+    // DAILY
+    { id: 'db-lighting', freq: 'daily', role: 'everyone', label: 'Lighting & Ambiance', sub: 'Gut Check' },
+    { id: 'db-smells', freq: 'daily', role: 'everyone', label: 'Smells', sub: 'Gut Check' },
+    { id: 'db-sounds', freq: 'daily', role: 'everyone', label: 'Sounds', sub: 'Gut Check' },
+    { id: 'db-vibe', freq: 'daily', role: 'everyone', label: 'Vibe', sub: 'Gut Check — does it feel like a place you want to be?' },
+    // WEEKLY
+    { id: 'db-cultural', freq: 'weekly', role: 'culture', label: 'Culturally Relevant & Identity-Affirming Decor', sub: 'Inspirational quotes, family photos, examples of excellence from the community' },
+    { id: 'db-jobs', freq: 'weekly', role: 'culture', label: 'Class Jobs Posted', sub: 'ES, MS' },
+    { id: 'db-beat', freq: 'weekly', role: 'culture', label: 'BEAT Point Focus of the Week', sub: '' },
+    { id: 'db-student', freq: 'weekly', role: 'culture', label: 'Student of the Week', sub: 'ES, MS' },
+    // MONTHLY
+    { id: 'db-culture-incentive', freq: 'monthly', role: 'culture', label: 'Evidence of Culture Incentives', sub: '' },
+    { id: 'db-attend-incentive', freq: 'monthly', role: 'ops', label: 'Evidence of Attendance Incentives', sub: '' },
+    { id: 'db-bulletin', freq: 'monthly', role: 'ops', label: 'Bulletin Boards & Displays', sub: 'Represent and celebrate kids; updated with student work (celebrating achievement and growth)' },
+    // BOY & MOY
+    { id: 'db-keymsg', freq: 'boy-moy', role: 'instructional', label: 'Key Messages Posted', sub: '' },
+    { id: 'db-college', freq: 'boy-moy', role: 'instructional', label: 'College Signage', sub: 'On the door, outside the door, or inside the classroom' },
+  ]
+};
+
+const FREQ_ORDER = ['daily', 'weekly', 'monthly', 'boy-moy'];
+const FREQ_LABELS = { 'daily': 'Daily', 'weekly': 'Weekly', 'monthly': 'Monthly', 'boy-moy': 'BOY & MOY' };
+const FREQ_CLASSES = { 'daily': 'freq-daily', 'weekly': 'freq-weekly', 'monthly': 'freq-monthly', 'boy-moy': 'freq-boy-moy' };
+
+// ============================================================
+// ⚠️  PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW  ⚠️
+// ============================================================
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwlieRwGI4KApFKCaeyv2Ayp6HbaHwfU9EptdjgKDCjYECB0PH8jaCbqs8uegMkb7Jguw/exec";
+// ============================================================
+
+let currentStep = 1;
+let ratings = {};
+let overallRating = null;
+
+// ============================================================
+// INIT
+// ============================================================
+document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+updateProgress();
+
+// ============================================================
+// FILTERING LOGIC
+// ============================================================
+function getSelectedRole() {
+  const r = document.querySelector('input[name="role"]:checked');
+  return r ? r.value : null;
+}
+function getSelectedFreq() {
+  const f = document.querySelector('input[name="freq"]:checked');
+  return f ? f.value : null;
+}
+
+function shouldShowItem(item, role, freqCutoff) {
+  // Frequency: show items at selected freq and all higher frequencies
+  const cutoffIdx = FREQ_ORDER.indexOf(freqCutoff);
+  const itemIdx = FREQ_ORDER.indexOf(item.freq);
+  if (itemIdx > cutoffIdx) return false;
+
+  // Role: "everyone" items always show; "admin" sees everything
+  if (role === 'admin') return true;
+  if (item.role === 'everyone') return true;
+  return item.role === role;
+}
+
+// ============================================================
+// RENDER INSPECTION ITEMS
+// ============================================================
+function renderItems(containerId, items, role, freq) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+
+  const filtered = items.filter(item => shouldShowItem(item, role, freq));
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<p style="color:#888; font-style:italic; padding:12px 0;">No items for your role at this frequency.</p>';
+    return;
+  }
+
+  // Group by frequency
+  const grouped = {};
+  filtered.forEach(item => {
+    if (!grouped[item.freq]) grouped[item.freq] = [];
+    grouped[item.freq].push(item);
+  });
+
+  FREQ_ORDER.forEach(f => {
+    if (!grouped[f]) return;
+    const badge = `<span class="frequency-badge ${FREQ_CLASSES[f]}">${FREQ_LABELS[f]}</span>`;
+    let html = badge;
+
+    grouped[f].forEach(item => {
+      const current = ratings[item.id] || '';
+      html += `
+        <div class="rating-row">
+          <div class="rating-label">
+            <strong>${item.label}</strong>
+            ${item.sub ? `<div class="checklist-sub">${item.sub}</div>` : ''}
+          </div>
+          <div class="rating-options">
+            <button class="rating-btn ${current === 'Y' ? 'selected' : ''}" onclick="rate('${item.id}', 'Y', this)" title="Yes / Met">✓</button>
+            <button class="rating-btn ${current === 'N' ? 'selected' : ''}" onclick="rate('${item.id}', 'N', this)" title="No / Not Met">✗</button>
+            <button class="rating-btn na-btn ${current === 'NA' ? 'selected' : ''}" onclick="rate('${item.id}', 'NA', this)" title="N/A">—</button>
+          </div>
+        </div>`;
+    });
+
+    container.innerHTML += `<div style="margin-bottom:20px;">${html}</div>`;
+  });
+}
+
+function rate(itemId, value, btn) {
+  ratings[itemId] = value;
+  const row = btn.closest('.rating-row');
+  row.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function setOverall(btn) {
+  overallRating = parseInt(btn.dataset.val);
+  document.querySelectorAll('.overall-rating').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function startInspection() {
+  const name = document.getElementById('inspectorName').value.trim();
+  const role = getSelectedRole();
+  const school = document.getElementById('schoolSelect').value;
+  const classroom = document.getElementById('classroomTeacher').value.trim();
+  const freq = getSelectedFreq();
+
+  if (!name || !role || !school || !classroom || !freq) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  // Render items based on selection
+  renderItems('blueprintItems', ITEMS.blueprint, role, freq);
+  renderItems('doorbellItems', ITEMS.doorbell, role, freq);
+
+  goStep(2);
+}
+
+function goStep(step) {
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.add('hidden');
+    s.classList.remove('active');
+  });
+  const el = document.getElementById(`step-${step}`);
+  el.classList.remove('hidden');
+  el.classList.add('active');
+  currentStep = step;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (step === 5) buildReview();
+}
+
+function updateProgress() {
+  const pct = Math.round(((currentStep - 1) / 5) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  const indicator = document.getElementById('stepIndicator');
+  indicator.innerHTML = '';
+  for (let i = 1; i <= 6; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot' + (i === currentStep ? ' active' : '') + (i < currentStep ? ' completed' : '');
+    indicator.appendChild(dot);
+  }
+}
+
+// ============================================================
+// REVIEW & SUBMIT
+// ============================================================
+function buildReview() {
+  const role = getSelectedRole();
+  const freq = getSelectedFreq();
+  const roleLabels = { instructional: 'Instructional Teammate', culture: 'Culture Teammate', ops: 'Ops Teammate', admin: 'School Leader / Admin' };
+
+  let html = `
+    <div class="summary-card">
+      <h4>Inspection Details</h4>
+      <div class="summary-item"><span>Inspector</span><span class="summary-value">${document.getElementById('inspectorName').value}</span></div>
+      <div class="summary-item"><span>Role</span><span class="summary-value">${roleLabels[role]}</span></div>
+      <div class="summary-item"><span>School</span><span class="summary-value">${document.getElementById('schoolSelect').value}</span></div>
+      <div class="summary-item"><span>Classroom</span><span class="summary-value">${document.getElementById('classroomTeacher').value}</span></div>
+      <div class="summary-item"><span>Frequency</span><span class="summary-value">${FREQ_LABELS[freq]}</span></div>
+      <div class="summary-item"><span>Date</span><span class="summary-value">${new Date().toLocaleDateString()}</span></div>
+    </div>`;
+
+  // Tally
+  let yesCount = 0, noCount = 0, naCount = 0, unanswered = 0;
+  const allItems = [...ITEMS.blueprint, ...ITEMS.doorbell];
+  const relevant = allItems.filter(item => shouldShowItem(item, role, freq));
+
+  const buildSection = (title, items) => {
+    const filtered = items.filter(item => shouldShowItem(item, role, freq));
+    if (filtered.length === 0) return '';
+    let s = `<div class="summary-card"><h4>${title}</h4>`;
+    filtered.forEach(item => {
+      const val = ratings[item.id] || 'Not rated';
+      let cls = '';
+      if (val === 'Y') { cls = 'yes'; yesCount++; }
+      else if (val === 'N') { cls = 'no'; noCount++; }
+      else if (val === 'NA') { cls = 'na'; naCount++; }
+      else { unanswered++; }
+      const display = val === 'Y' ? '✓ Yes' : val === 'N' ? '✗ No' : val === 'NA' ? '— N/A' : '⚠ Not rated';
+      s += `<div class="summary-item"><span>${item.label}</span><span class="summary-value ${cls}">${display}</span></div>`;
+    });
+    s += '</div>';
+    return s;
+  };
+
+  html += buildSection('The Blueprint — Cleanliness & Readiness', ITEMS.blueprint);
+  html += buildSection('The Doorbell Effect — Pride & Culture', ITEMS.doorbell);
+
+  const ratable = yesCount + noCount;
+  const score = ratable > 0 ? Math.round((yesCount / ratable) * 100) : 0;
+
+  html += `<div class="summary-card"><h4>Score Summary</h4>
+    <div class="summary-item"><span>Met (✓)</span><span class="summary-value yes">${yesCount}</span></div>
+    <div class="summary-item"><span>Not Met (✗)</span><span class="summary-value no">${noCount}</span></div>
+    <div class="summary-item"><span>N/A</span><span class="summary-value na">${naCount}</span></div>
+    ${unanswered > 0 ? `<div class="summary-item"><span>Not Rated</span><span class="summary-value" style="color:#e67e22">⚠ ${unanswered}</span></div>` : ''}
+    <div class="summary-item" style="border-top:2px solid #eee; padding-top:8px; margin-top:4px;"><span><strong>Score</strong></span><span class="summary-value" style="font-size:1.1rem;">${score}%</span></div>
+    ${overallRating ? `<div class="summary-item"><span><strong>Overall Rating</strong></span><span class="summary-value">${overallRating}/5</span></div>` : ''}
+  </div>`;
+
+  if (document.getElementById('topStrength').value.trim()) {
+    html += `<div class="summary-card"><h4>Top Strength</h4><p style="font-size:0.88rem;">${document.getElementById('topStrength').value}</p></div>`;
+  }
+  if (document.getElementById('actionItem').value.trim()) {
+    html += `<div class="summary-card"><h4>Highest-Priority Action Item</h4><p style="font-size:0.88rem;">${document.getElementById('actionItem').value}</p></div>`;
+  }
+
+  document.getElementById('reviewContent').innerHTML = html;
+}
+
+function submitForm() {
+  const role = getSelectedRole();
+  const freq = getSelectedFreq();
+  const roleLabels = { instructional: 'Instructional Teammate', culture: 'Culture Teammate', ops: 'Ops Teammate', admin: 'School Leader / Admin' };
+  const allItems = [...ITEMS.blueprint, ...ITEMS.doorbell];
+  const relevant = allItems.filter(item => shouldShowItem(item, role, freq));
+
+  let yesCount = 0, noCount = 0, naCount = 0;
+  relevant.forEach(item => {
+    if (ratings[item.id] === 'Y') yesCount++;
+    if (ratings[item.id] === 'N') noCount++;
+    if (ratings[item.id] === 'NA') naCount++;
+  });
+  const ratable = yesCount + noCount;
+  const score = ratable > 0 ? Math.round((yesCount / ratable) * 100) : 0;
+
+  // Build payload for Google Sheets
+  const payload = {
+    inspectorName: document.getElementById('inspectorName').value,
+    role: roleLabels[role] || role,
+    school: document.getElementById('schoolSelect').value,
+    classroom: document.getElementById('classroomTeacher').value,
+    frequency: FREQ_LABELS[freq],
+    overallRating: overallRating || '',
+    score: score + '%',
+    itemsMet: yesCount,
+    itemsNotMet: noCount,
+    itemsNA: naCount,
+    ratings: { ...ratings },
+    topStrength: document.getElementById('topStrength').value,
+    actionItem: document.getElementById('actionItem').value,
+    additionalNotes: document.getElementById('additionalNotes').value,
+  };
+
+  // Disable submit button while sending
+  const submitBtn = document.querySelector('#step-5 .btn-primary');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending to Google Sheets...';
+
+  // Send to Google Sheets
+  if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== "PASTE_YOUR_WEB_APP_URL_HERE") {
+    fetch(GOOGLE_SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      document.getElementById('successSubMsg').textContent = '✅ Data sent to Google Sheets';
+      document.getElementById('successSubMsg').style.color = '#27ae60';
+    })
+    .catch(err => {
+      document.getElementById('successSubMsg').textContent = '⚠️ Could not reach Google Sheets — CSV backup available below';
+      document.getElementById('successSubMsg').style.color = '#e67e22';
+      console.error('Google Sheets error:', err);
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    });
+  } else {
+    document.getElementById('successSubMsg').textContent = '⚠️ No Google Sheets URL configured — using CSV export only';
+    document.getElementById('successSubMsg').style.color = '#e67e22';
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  }
+
+  // Also store locally as backup
+  const entry = { ...payload, timestamp: new Date().toISOString() };
+  let history = [];
+  try { history = JSON.parse(localStorage.getItem('inspections') || '[]'); } catch(e) {}
+  history.push(entry);
+  try { localStorage.setItem('inspections', JSON.stringify(history)); } catch(e) {}
+
+  document.getElementById('successMsg').textContent = `${document.getElementById('classroomTeacher').value} at ${document.getElementById('schoolSelect').value} — inspected by ${document.getElementById('inspectorName').value}`;
+  document.getElementById('scoreBox').innerHTML = `<div class="score-display">${score}%</div><div style="color:#888; font-size:0.85rem; margin-top:4px;">${yesCount} of ${ratable} items met</div>`;
+
+  goStep(6);
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
+function downloadCSV() {
+  const role = getSelectedRole();
+  const freq = getSelectedFreq();
+  const allItems = [...ITEMS.blueprint, ...ITEMS.doorbell];
+  const relevant = allItems.filter(item => shouldShowItem(item, role, freq));
+
+  let csv = 'Timestamp,Inspector,Role,School,Classroom,Frequency,Category,Item,Rating,Overall Rating,Top Strength,Action Item,Notes\n';
+
+  relevant.forEach(item => {
+    const section = ITEMS.blueprint.includes(item) ? 'The Blueprint' : 'The Doorbell Effect';
+    const val = ratings[item.id] || '';
+    const row = [
+      new Date().toISOString(),
+      `"${document.getElementById('inspectorName').value}"`,
+      role,
+      `"${document.getElementById('schoolSelect').value}"`,
+      `"${document.getElementById('classroomTeacher').value}"`,
+      freq,
+      section,
+      `"${item.label}"`,
+      val,
+      overallRating || '',
+      `"${(document.getElementById('topStrength').value || '').replace(/"/g, '""')}"`,
+      `"${(document.getElementById('actionItem').value || '').replace(/"/g, '""')}"`,
+      `"${(document.getElementById('additionalNotes').value || '').replace(/"/g, '""')}"`
+    ];
+    csv += row.join(',') + '\n';
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `classroom-inspection-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetForm() {
+  ratings = {};
+  overallRating = null;
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('inspectorName').value = '';
+  document.getElementById('schoolSelect').value = '';
+  document.getElementById('classroomTeacher').value = '';
+  document.getElementById('topStrength').value = '';
+  document.getElementById('actionItem').value = '';
+  document.getElementById('additionalNotes').value = '';
+  goStep(1);
+}
+</script>
+</body>
+</html>
